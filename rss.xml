@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Gatsby Starter Blog RSS Feed]]></title><description><![CDATA[Gatsby Starter Blog RSS Feed]]></description><link>https://www.embeacons.com</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 04 Mar 2022 12:29:51 GMT</lastBuildDate><item><title><![CDATA[Vector Arithmetic with VAE]]></title><description><![CDATA[Building an accordion AE to retry experiment from last week Accordion V1  Blocking effect seems to be happening. After testing new…]]></description><link>https://www.embeacons.com/my-second-post/</link><guid isPermaLink="false">https://www.embeacons.com/my-second-post/</guid><pubDate>Sat, 19 Feb 2022 19:44:28 GMT</pubDate><content:encoded>&lt;h2&gt;Building an accordion AE to retry experiment from last week&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Gatsby Starter Blog RSS Feed]]></title><description><![CDATA[Gatsby Starter Blog RSS Feed]]></description><link>https://www.embeacons.com</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 04 Mar 2022 20:17:06 GMT</lastBuildDate><item><title><![CDATA[Vector Arithmetic with VAE]]></title><description><![CDATA[Building an accordion AE to retry experiment from last week Accordion V1  Blocking effect seems to be happening. After testing new…]]></description><link>https://www.embeacons.com/wk-8-vector-arithmetic/</link><guid isPermaLink="false">https://www.embeacons.com/wk-8-vector-arithmetic/</guid><pubDate>Sat, 19 Feb 2022 19:44:28 GMT</pubDate><content:encoded>&lt;h2&gt;Building an accordion AE to retry experiment from last week&lt;/h2&gt;
 &lt;h3&gt;Accordion V1&lt;/h3&gt;
 &lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;python&quot;&gt;&lt;pre class=&quot;language-python&quot;&gt;&lt;code class=&quot;language-python&quot;&gt;Model&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;token string&quot;&gt;&quot;model&quot;&lt;/span&gt;
 _________________________________________________________________
@@ -260,6 +260,121 @@ Non&lt;span class=&quot;token operator&quot;&gt;-&lt;/span&gt;trainable params&l
     &lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;For my vector arithmetic equation, I chose to use the same equation as the article.&lt;/p&gt;
 &lt;p&gt;&lt;code class=&quot;language-text&quot;&gt;smiling woman - neutral woman + neutral man = smiling man&lt;/code&gt;&lt;/p&gt;
+&lt;h2&gt;VAE Vector Arithmetic Results&lt;/h2&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/vynsblog/static/1acbaa242d5054768e035633960ee508/8e1fc/vector_arithmetic_result.jpg&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 144.30379746835442%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAAdABQDASIAAhEBAxEB/8QAFwABAQEBAAAAAAAAAAAAAAAAAAQDAf/EABYBAQEBAAAAAAAAAAAAAAAAAAIBAP/aAAwDAQACEAMQAAABuqz2K2cI4oa5Spp//8QAHRAAAgIBBQAAAAAAAAAAAAAAAAIBAzISEyEiI//aAAgBAQABBQLkpwIhivE7C6z1N1ihpdD/xAAWEQEBAQAAAAAAAAAAAAAAAAAQARL/2gAIAQMBAT8Bpk//xAAVEQEBAAAAAAAAAAAAAAAAAAAQEf/aAAgBAgEBPwEp/8QAHhAAAAYCAwAAAAAAAAAAAAAAAAECEBExIVEiQYH/2gAIAQEABj8CRd7HdsXArFQ3oKWTkSe2/8QAHxAAAQQCAgMAAAAAAAAAAAAAAQARITEQkVFxYdHh/9oACAEBAAE/IRwB8k6xKV42M8ISJX1gTFW1KkgZi+0ZFgG7Q7w+kccgY//aAAwDAQACAAMAAAAQCM0B/8QAFxEBAQEBAAAAAAAAAAAAAAAAAREAEP/aAAgBAwEBPxBE4oLdd//EABgRAQADAQAAAAAAAAAAAAAAAAEAEBEh/9oACAECAQE/EA7QFyZP/8QAHxABAAEEAgMBAAAAAAAAAAAAAREAITFhEMFBgfCh/9oACAEBAAE/EDNWSUPhppypccueAYkJg6XL/RSUNTYMzvhe65jR1X5BGcMamkJlK1mKgbhsdNtKaSEg8HH/2Q==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Vector Arithmetic Result&quot;
+        title=&quot;Vector Arithmetic Result&quot;
+        src=&quot;/vynsblog/static/1acbaa242d5054768e035633960ee508/828fb/vector_arithmetic_result.jpg&quot;
+        srcset=&quot;/vynsblog/static/1acbaa242d5054768e035633960ee508/ff44c/vector_arithmetic_result.jpg 158w,
+/vynsblog/static/1acbaa242d5054768e035633960ee508/a6688/vector_arithmetic_result.jpg 315w,
+/vynsblog/static/1acbaa242d5054768e035633960ee508/828fb/vector_arithmetic_result.jpg 630w,
+/vynsblog/static/1acbaa242d5054768e035633960ee508/8e1fc/vector_arithmetic_result.jpg 900w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Blurriness seems to get propagated, but images seem to make more sense.&lt;/li&gt;
+&lt;li&gt;I think taking the average of the images is causing problems.&lt;/li&gt;
+&lt;li&gt;Perhaps we need more than just 3 images to average?&lt;/li&gt;
+&lt;li&gt;Perhaps a GAN would work better?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Latent space distributions&lt;/h2&gt;
+&lt;p&gt;I wanted to get a better visualization of the latent space for each average image, so I made a histogram of each latent vector.&lt;/p&gt;
+&lt;p&gt;Notice they all ‘seem’ to be a normal distribution.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/vynsblog/static/819ab0e4bf512a10d12f9b59abb67809/525d3/latent_dist.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 55.06329113924051%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAAA9hAAAPYQGoP6dpAAACUUlEQVQoz3VTS09TURDuLyDGxOhCSHTtSjEuMO7cyEJ3btiy0/pIpGHlMzUuIBHZNHGDCzUGLQaw2AgRaQyJoDGUik1ThXpNaUF7e5/nnnP7OWcuJWw8yfTMmc58883jxlqtFrTQD6SUCAJBegjbtlGr1VCv12EYBrZqm6RHb9M02V/JgPyDKB7gO9Z+aDDXsVGu/Mbaj1/kLCGEYGkQwNpPA2bT4qBQKfwxLRTKFdiWCd8XHK9PDDvHdly+lzcaSLxcYd1iWwtvVqoYmStBUe6AEkjhYX3bQSZfZb9AKmbKgG2GjuvxvVjeQv/YJ9YbxEif5HQBF0YXWNdsVODD+Ovg0WwR48sVYrcHsF2760YML6Y+ou/x4g6gzfc9Auy+m4XlS0gK9D0XDVfg6OA0rj7/wj5C7GGoJRA+XCHROTCJ/icRQ9fzuIdnh+dx6Ppr5A09DAWPkjsE3jUwhfiz/wAKn4IDhWM3Z9D78AN8XQbZjG0Lp5LvcODaBLKrumcKipKXNi22Jca/Rq2gxLslq1CvjUSuWEPnjUkupVht8kDSS+s4TDbNsHdkgVj7PJT408/ouPQK50dzaFL5eitabYYMCInU+xI6LqdZhrLfOeNYroT9VyZwkACPUKJaw4Fp2Tj9YA774ml0JaYoObUCITRMLAyjKa9u1HFueBY9ySy6b2fQl8pxGwZfLOH4rQzO3M/i5J0ZzH8zUCBf/e5JvsUJ8h3K5BlQL8zu2uhdcmglAv21kHg0IKVC6k1AvZUsvpDcZ0l2zw+i/8jX9sTu1/IPev8OzFzIMY0AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;Latent space distributions&quot;
+        title=&quot;Latent space distributions&quot;
+        src=&quot;/vynsblog/static/819ab0e4bf512a10d12f9b59abb67809/f058b/latent_dist.png&quot;
+        srcset=&quot;/vynsblog/static/819ab0e4bf512a10d12f9b59abb67809/c26ae/latent_dist.png 158w,
+/vynsblog/static/819ab0e4bf512a10d12f9b59abb67809/6bdcf/latent_dist.png 315w,
+/vynsblog/static/819ab0e4bf512a10d12f9b59abb67809/f058b/latent_dist.png 630w,
+/vynsblog/static/819ab0e4bf512a10d12f9b59abb67809/40601/latent_dist.png 945w,
+/vynsblog/static/819ab0e4bf512a10d12f9b59abb67809/525d3/latent_dist.png 1090w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;I also noticed the distribution of the first few values of the latent vector and
+possibly all the values of the latent vector to follow a normal-ish distribution
+when comparing each corresponding value in 90 different predictions.&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/vynsblog/static/f583f9c84248a360895752699ebf069d/024d6/3_value_dist.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 54.43037974683544%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAALCAYAAAB/Ca1DAAAACXBIWXMAAA9hAAAPYQGoP6dpAAACWUlEQVQoz11STWsTURTNwo24UUSta3+CG/UPuHChoN2K0IWgYEld6cKNVAUXxX5AKVoo4qKtJQ3FqjXGxEqC1mBKbG0am4+2SdqGySTzmfl4c3zvTlJLLwwM95133jn33IDneRDFGIOqqqiWt1HI5yFJEhRFQW1vz+8Vi6hUKmg0GpBlGcVSCbXdHcJYlkUcgivQ+TFME4am4k+pivKeBMe2YLVaaKgG0hsVKM0GdF2H4ziwbJv/a0itb0GqyzAMA67rEikRCpCiatSYW64imq0JzdCbMpIbNfRMpNApwzBJlaiJZAmCxuPubM6xT0h2NZ0aU0ubeDT7W8AAS8Oz+RVcevoZLseIanHVmu5jXycLMG0XzHVI1H+FXK7VMqG1HFweiOP5xzUidE0Vg5Esjt8LIb0p+wr5aMi6y/BqMU891zlESHKZjVSpjqN33mIomiPLjBOOfsnh2N0ZLBUkuqBxy8xuoSwbpDy7oxBWzPUAIZ+Ea5OKk70hvIis06FI89rwIk4Hw/jFHxNliqAUFe8zFZy9H0b/u1V/FNZhQv5KblfFmb4wukcTZKMuN3Ch/xO6+MUPmSra/pDIVnDxSQRdHNs3laa23VHo76GHal3laf7klmdw7uE8MlsSNFXB+ccLCPRMIjiZbufMMB7P4sjtaZziyk/0zmIsliMOxqkCrL3Yoe9/cWUgiptj33B9OI7x2Bp0TUHwzQ9cHYxhaGEFy8UaqlIT8dVtdI/EcetlAjdGvuLBdIrvrX1wbTyKXrze+TyevL+snt9jLg2eAvQ6OG//nLXX6h+zWRbG6N29QgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;3 Value dist&quot;
+        title=&quot;3 Value dist&quot;
+        src=&quot;/vynsblog/static/f583f9c84248a360895752699ebf069d/f058b/3_value_dist.png&quot;
+        srcset=&quot;/vynsblog/static/f583f9c84248a360895752699ebf069d/c26ae/3_value_dist.png 158w,
+/vynsblog/static/f583f9c84248a360895752699ebf069d/6bdcf/3_value_dist.png 315w,
+/vynsblog/static/f583f9c84248a360895752699ebf069d/f058b/3_value_dist.png 630w,
+/vynsblog/static/f583f9c84248a360895752699ebf069d/40601/3_value_dist.png 945w,
+/vynsblog/static/f583f9c84248a360895752699ebf069d/024d6/3_value_dist.png 961w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Note the distributions are ‘normal-ish’ but don’t always have a mean of 0.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;I’d like to retry this experiment with a GAN to see if performance is better.&lt;/li&gt;
+&lt;/ul&gt;
 &lt;h2&gt;Sources&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;https://machinelearningmastery.com/how-to-interpolate-and-perform-vector-arithmetic-with-faces-using-a-generative-adversarial-network/&quot;&gt;https://machinelearningmastery.com/how-to-interpolate-and-perform-vector-arithmetic-with-faces-using-a-generative-adversarial-network/&lt;/a&gt;&lt;/li&gt;
