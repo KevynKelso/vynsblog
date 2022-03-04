@@ -54,6 +54,8 @@ _________________________________________________________________
 ![CelebA dataset sample](./celeb_dataset.png)
 ### Preprocessing
 To increase model performance, only the faces in each image were extracted using a pre-trained Multi-Task Cascaded Convolutional Neural Network (MTCNN).
+Below are the same faces as above, but only the face extracted.
+![CelebA extracted faces](./celeba_extracted.png)
 
 ## VAE Model for vector arithmetic
 Note: The model from the article is a GAN, I chose to use a VAE to keep our experiments more consistent with the 'autoencoder' structure.
@@ -113,6 +115,16 @@ Total params: 203,251
 Trainable params: 203,251
 Non-trainable params: 0
 ```
+## VAE Reconstruction results
+The result here is better than I expected for a VAE of this size, output was expected to be blurry, but one can make out who the face is. It might be worth using a GAN for future experiments as that's what was used in the article.
+![Convolutional VAE V1 Reconstruction Results](./conv_vae_v1_results.png)
 ## Vector Arithmetic process
 ![Vector Arithmetic Process](./vector_arithmetic_process.jpg)
+
+For my vector arithmetic equation, I chose to use the same equation as the article.
+
+`smiling woman - neutral woman + neutral man = smiling man`
+
+## Sources
+- https://machinelearningmastery.com/how-to-interpolate-and-perform-vector-arithmetic-with-faces-using-a-generative-adversarial-network/
 
