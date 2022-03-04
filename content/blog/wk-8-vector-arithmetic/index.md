@@ -124,6 +124,29 @@ The result here is better than I expected for a VAE of this size, output was exp
 For my vector arithmetic equation, I chose to use the same equation as the article.
 
 `smiling woman - neutral woman + neutral man = smiling man`
+## VAE Vector Arithmetic Results
+![Vector Arithmetic Result](./vector_arithmetic_result.jpg)
+- Blurriness seems to get propagated, but images seem to make more sense.
+- I think taking the average of the images is causing problems.
+- Perhaps we need more than just 3 images to average?
+- Perhaps a GAN would work better?
+
+## Latent space distributions
+I wanted to get a better visualization of the latent space for each average image, so I made a histogram of each latent vector.
+
+Notice they all 'seem' to be a normal distribution.
+
+![Latent space distributions](./latent_dist.png)
+
+I also noticed the distribution of the first few values of the latent vector and
+possibly all the values of the latent vector to follow a normal-ish distribution
+when comparing each corresponding value in 90 different predictions.
+
+![3 Value dist](./3_value_dist.png)
+- Note the distributions are 'normal-ish' but don't always have a mean of 0.
+
+## Conclusion
+- I'd like to retry this experiment with a GAN to see if performance is better.
 
 ## Sources
 - https://machinelearningmastery.com/how-to-interpolate-and-perform-vector-arithmetic-with-faces-using-a-generative-adversarial-network/
