@@ -1,4 +1,506 @@
-<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Gatsby Starter Blog RSS Feed]]></title><description><![CDATA[Gatsby Starter Blog RSS Feed]]></description><link>https://www.embeacons.com</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 18 Mar 2022 18:44:55 GMT</lastBuildDate><item><title><![CDATA[GAN Optimization Experiments]]></title><description><![CDATA[Performance metrics blur discriminator loss/accuracy ‘real’ discriminator loss/accuracy ‘fake’ generator loss/accuracy Number of parameters…]]></description><link>https://www.embeacons.com/wk-11-gan-optimizations/</link><guid isPermaLink="false">https://www.embeacons.com/wk-11-gan-optimizations/</guid><pubDate>Sun, 13 Mar 2022 22:12:03 GMT</pubDate><content:encoded>&lt;h2&gt;Performance metrics&lt;/h2&gt;
+<?xml version="1.0" encoding="UTF-8"?><rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0"><channel><title><![CDATA[Gatsby Starter Blog RSS Feed]]></title><description><![CDATA[Gatsby Starter Blog RSS Feed]]></description><link>https://www.embeacons.com</link><generator>GatsbyJS</generator><lastBuildDate>Fri, 08 Apr 2022 19:24:12 GMT</lastBuildDate><item><title><![CDATA[AE GAN Experiments]]></title><description><![CDATA[Overriding the training function in Sequential model Problem: Need to access output of generator during the GAN training process. Typically…]]></description><link>https://www.embeacons.com/wk-14-vae-gan/</link><guid isPermaLink="false">https://www.embeacons.com/wk-14-vae-gan/</guid><pubDate>Fri, 01 Apr 2022 22:12:03 GMT</pubDate><content:encoded>&lt;h3&gt;Overriding the training function in Sequential model&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;Problem&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Need to access output of generator during the GAN training process. Typically, only have access to the output of the discriminator.&lt;/li&gt;
+&lt;li&gt;Need access to the input data &lt;code class=&quot;language-text&quot;&gt;x&lt;/code&gt; during training to measure the reconstruction loss.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;strong&gt;Solution&lt;/strong&gt;:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Wrap loss function in function that takes the generator, as well as alpha and beta as parameters.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;python&quot;&gt;&lt;pre class=&quot;language-python&quot;&gt;&lt;code class=&quot;language-python&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;loss_wapper&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;g_model&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; alpha&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; beta&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    mse &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; MeanSquaredError&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+    bce &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; BinaryCrossentropy&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;from_logits&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;loss&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;x&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; y_true&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; y_pred&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+        y &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; g_model&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;x&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+        ae_loss &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; tf&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;math&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;scalar_mul&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;alpha&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; mse&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;x&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; y&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+        gan_loss &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; tf&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;math&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;scalar_mul&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;beta&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; bce&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;y_true&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; y_pred&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;token comment&quot;&gt;# Here is where I plotted the ae_loss and gan_loss values in order to tune alpha and beta&lt;/span&gt;
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; ae_loss &lt;span class=&quot;token operator&quot;&gt;+&lt;/span&gt; gan_loss
+
+    &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; loss&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;ul&gt;
+&lt;li&gt;Override train_step function in Sequential model to call loss function with the input data &lt;code class=&quot;language-text&quot;&gt;x&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;em&gt;Note&lt;/em&gt;: &lt;code class=&quot;language-text&quot;&gt;my_loss&lt;/code&gt; gets set to the loss function above.&lt;/p&gt;
+&lt;div class=&quot;gatsby-highlight&quot; data-language=&quot;python&quot;&gt;&lt;pre class=&quot;language-python&quot;&gt;&lt;code class=&quot;language-python&quot;&gt;&lt;span class=&quot;token keyword&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;token class-name&quot;&gt;VAEGAN&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;tf&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;keras&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;Sequential&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;compile&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;self&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; optimizer&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; my_loss&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; run_eagerly&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;token builtin&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;token builtin&quot;&gt;compile&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;optimizer&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; run_eagerly&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+        self&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;my_loss &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; my_loss
+
+    &lt;span class=&quot;token keyword&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;token function&quot;&gt;train_step&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;self&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; data&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+        x&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; y&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; sample_weight &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; data_adapter&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;unpack_x_y_sample_weight&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;data&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+        &lt;span class=&quot;token keyword&quot;&gt;with&lt;/span&gt; tf&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;GradientTape&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;token keyword&quot;&gt;as&lt;/span&gt; tape&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt;
+            y_pred &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; self&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;x&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; training&lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;token boolean&quot;&gt;True&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+            loss_value &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; self&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;my_loss&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;x&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; y&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; y_pred&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+        grads &lt;span class=&quot;token operator&quot;&gt;=&lt;/span&gt; tape&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;gradient&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;loss_value&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; self&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;trainable_variables&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+        self&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;optimizer&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;apply_gradients&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;token builtin&quot;&gt;zip&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;(&lt;/span&gt;grads&lt;span class=&quot;token punctuation&quot;&gt;,&lt;/span&gt; self&lt;span class=&quot;token punctuation&quot;&gt;.&lt;/span&gt;trainable_variables&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;)&lt;/span&gt;
+
+        &lt;span class=&quot;token keyword&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;token punctuation&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;token string&quot;&gt;&quot;loss&quot;&lt;/span&gt;&lt;span class=&quot;token punctuation&quot;&gt;:&lt;/span&gt; loss_value&lt;span class=&quot;token punctuation&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;Note&lt;/em&gt;: eager execution allows access to the tensors (for debugging) inside the loss function. So I was able to print out and display values and stuff like that.&lt;/p&gt;
+&lt;h2&gt;Note on learning rate&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;If loss is unstable (going up and down violently).&lt;/li&gt;
+&lt;li&gt;Need to reduce learning rate.&lt;/li&gt;
+&lt;li&gt;Gradient descent is taking too large of steps, and jumping out of the minima.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Verification of loss function&lt;/h2&gt;
+&lt;h3&gt;Verification test 1&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;If alpha = 1 and beta = 0, should get same result as training a typical autoencoder. This is because the loss will be only the reconstruction loss, and only depend on X and output of the generator (AE) y.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/vynsblog/static/331f6e9a8f8f55639019d8b4cdea2473/b3430/loss_verify_1_output.jpg&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 34.810126582278485%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAAHABQDASIAAhEBAxEB/8QAFwABAAMAAAAAAAAAAAAAAAAAAAIDBf/EABQBAQAAAAAAAAAAAAAAAAAAAAH/2gAMAwEAAhADEAAAAdSYNgT/xAAWEAEBAQAAAAAAAAAAAAAAAAABAAL/2gAIAQEAAQUCTVsWxf/EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQMBAT8BP//EABQRAQAAAAAAAAAAAAAAAAAAABD/2gAIAQIBAT8BP//EABgQAAIDAAAAAAAAAAAAAAAAAAABAjFx/9oACAEBAAY/ApWIen//xAAbEAACAgMBAAAAAAAAAAAAAAABEQAxIUFRcf/aAAgBAQABPyFwh1vyYg6NGMA0f//aAAwDAQACAAMAAAAQ8A//xAAXEQADAQAAAAAAAAAAAAAAAAAAATER/9oACAEDAQE/ENg6f//EABYRAQEBAAAAAAAAAAAAAAAAAAABEf/aAAgBAgEBPxDEf//EABoQAAMBAQEBAAAAAAAAAAAAAAERIQBBMYH/2gAIAQEAAT8Qan0rmhFceH4giu3AJc0ryb//2Q==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;loss verify 1 output&quot;
+        title=&quot;loss verify 1 output&quot;
+        src=&quot;/vynsblog/static/331f6e9a8f8f55639019d8b4cdea2473/828fb/loss_verify_1_output.jpg&quot;
+        srcset=&quot;/vynsblog/static/331f6e9a8f8f55639019d8b4cdea2473/ff44c/loss_verify_1_output.jpg 158w,
+/vynsblog/static/331f6e9a8f8f55639019d8b4cdea2473/a6688/loss_verify_1_output.jpg 315w,
+/vynsblog/static/331f6e9a8f8f55639019d8b4cdea2473/828fb/loss_verify_1_output.jpg 630w,
+/vynsblog/static/331f6e9a8f8f55639019d8b4cdea2473/0ede0/loss_verify_1_output.jpg 945w,
+/vynsblog/static/331f6e9a8f8f55639019d8b4cdea2473/b3430/loss_verify_1_output.jpg 1122w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+&lt;em&gt;Note&lt;/em&gt;: this output is the model trained at 23 epochs.
+&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/vynsblog/static/58ea1b21f64e5f95b06125ff41569821/c9d77/ae_loss_1_unscaled.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 62.0253164556962%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAMCAYAAABiDJ37AAAACXBIWXMAAB7CAAAewgFu0HU+AAACCElEQVQoz3WTu2sVQRSH89/YK2gtiIWdlaWgWOg/YWFjIRbBNIoIgiA+UAsLH0FBQYQIFgpiEoRVCTfezb4fsztzPs/M7t6bgA6c3ZnZM9/+zmNWRAQ/nHP0fa9msbbHGEOWZQesLEvyPKduGvVx4Yy1Ntg0ViagBxjT0psmQCdgmqYLK4p8AJY5ma6jKGI2m5EkCV3XDUD/8NCqrhFVhin577Dt8O5rrKmpqnqh0As4APRhuBEo497CbIf0Binnw7qKFa4A1y3S1S2BQ8i1KnT61wmIT0UwB9nvYFLMFK4Hf31CugYxlapVIX2H2R9yp8WoND9SJ+rQDkDXL0Odb8L2W4g+wo/38OSiHqqQJlP4Bm7nC8YFFQPQ06si01D2wmHZfAVpBN+ew/cX8PAc3DkFd0/DjaPD/PEF5MFZWD2M+3yfELBYBY6h+aK4r8/g0Xnk5nHk9knk1glk9QiydgxRiDy9hKxfQd5cRa4dQu6dgXfXcdkOxsqocAQ2pse9vAwf1lTha2RrHYm3kZ8bIRW+EDKmQ5IImW+FQoXs6OaiKFMftmWK+Dztq94/x+g/tJFh6pJl24wOld6CJNebUBviJFXLdN6yu5eG/axs2I1TsqoN6z+6XzSGearNXpTYvj+o0Gov+b/4JvU92YTrpfOq0htSEMdxePvr2bZtEOD8d829952U/gUS+JFJWMKWMgAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;ae loss 1 unscaled&quot;
+        title=&quot;ae loss 1 unscaled&quot;
+        src=&quot;/vynsblog/static/58ea1b21f64e5f95b06125ff41569821/f058b/ae_loss_1_unscaled.png&quot;
+        srcset=&quot;/vynsblog/static/58ea1b21f64e5f95b06125ff41569821/c26ae/ae_loss_1_unscaled.png 158w,
+/vynsblog/static/58ea1b21f64e5f95b06125ff41569821/6bdcf/ae_loss_1_unscaled.png 315w,
+/vynsblog/static/58ea1b21f64e5f95b06125ff41569821/f058b/ae_loss_1_unscaled.png 630w,
+/vynsblog/static/58ea1b21f64e5f95b06125ff41569821/40601/ae_loss_1_unscaled.png 945w,
+/vynsblog/static/58ea1b21f64e5f95b06125ff41569821/78612/ae_loss_1_unscaled.png 1260w,
+/vynsblog/static/58ea1b21f64e5f95b06125ff41569821/c9d77/ae_loss_1_unscaled.png 1964w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+&lt;em&gt;Note&lt;/em&gt;: Since beta = 0, the GAN loss has no effect on the model’s training.&lt;/p&gt;
+&lt;p&gt;This is the same graph as above, but GAN loss is multiplied by 0.005.
+&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/vynsblog/static/51bf3543a2dc0ad0db91a353f16674c5/75a80/ae_loss_1_scaled_005.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 60.75949367088608%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAMCAYAAABiDJ37AAAACXBIWXMAAA9hAAAPYQGoP6dpAAABr0lEQVQoz41T20oDMRDtn/oiPuijz36E4A8IIiqIIj4JgpeKdwXFK2rVl2JbYZtNdjfX40y2rrUt6MLJTDLJ2ZPMTC2EAP5C8HDO/UKWZZBSVuC5UqqMew8+68kySo6AGjvWWkjaqI2J/jfSNEWSJBV4LoSIsTzP0Ww20Wq1YuybNBIGmnSlQmYc/v15vkGp1pAQtn2EDkmqIAtbSf8TfdyseICQFBJhpt0P4T+JRxIarUmhHFKIQZTBCiVhGCbUuoBQWbSweUlIz1AhHiNwjK3TsSpCLxHWuoErUzAREu2uHJ0ATeuiCaQfQPIOvOyWYk0GqA5soWIZVYTWeRjVxcX5EdpHS7DnC/A3G/Bn8/AHc/DrU/CrE/BrZNcm4ZfH4DenEbZmgNVx2E4DrvccNR6cDyjEJ8zeLJLjRXQOF/G0v4Lb/XXc7izj7nQbD5d1PFyd4L7xhufrY7yebKJxVcfjSwMy11SHrl+hQyoSaFLJwjNDP6DH4i2K8mT41hRQNDhaz22AoqAmv6uK2D1VYVfJ41otawiWC9Wanq9R5NSCqYg+73TcST3f0r7+1vsCW6if9CBu5DYAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;ae loss 1 scaled 005&quot;
+        title=&quot;ae loss 1 scaled 005&quot;
+        src=&quot;/vynsblog/static/51bf3543a2dc0ad0db91a353f16674c5/f058b/ae_loss_1_scaled_005.png&quot;
+        srcset=&quot;/vynsblog/static/51bf3543a2dc0ad0db91a353f16674c5/c26ae/ae_loss_1_scaled_005.png 158w,
+/vynsblog/static/51bf3543a2dc0ad0db91a353f16674c5/6bdcf/ae_loss_1_scaled_005.png 315w,
+/vynsblog/static/51bf3543a2dc0ad0db91a353f16674c5/f058b/ae_loss_1_scaled_005.png 630w,
+/vynsblog/static/51bf3543a2dc0ad0db91a353f16674c5/40601/ae_loss_1_scaled_005.png 945w,
+/vynsblog/static/51bf3543a2dc0ad0db91a353f16674c5/75a80/ae_loss_1_scaled_005.png 1134w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/vynsblog/static/955d9c504413e97573f32fa435bb2583/6af66/discriminator_loss_1.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 75.31645569620254%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAA9hAAAPYQGoP6dpAAABrElEQVQ4y4WUi27iMBBF+f//2l9Y1ErQqkBJSt6O4/h5O2NM1qGp1tLg5xyur+3sQCWEgK3C41rrVTjn8Fvh9bsHjBdLKaGUwjRNmOcZwzDgcDisoiwLWjNDjBKjEBAUnOe9j5wI5BjHEcaYOKGNhZg0ArVz9Y+1clK4VTWOxyP2+z1Op1MUFIH8w6ratl2SrQvoJ7OCpM69drR1NaDvBzRNE3N5R4tCLjzw8Mc4/wO4ig3vWNSikGFd1y0+MLDLgHni1p9Ya9fA6AsZmyvs5DYw9jNYdIDyFiAfBPvAAzmwlfofJPmXQ34FPk647/vVlnMgnnzLoZtALnz3vE8K7RMwKRSKr9V/FMYBUjaQQqkteH2wM4yoUmK6i1TPooaPtuTbD9sKNXk5iTb55eHH6sfTcrLB1iNlq1YKeat116N7/YP+9BequUCXr7BjDdN/RbWWQl1fYId739HcnOa0kpieFfKbbG4FquKC8vOMW/GJ6uuKgtpVecX5453mS3y8H9HWt1jH/tsBkg7Vphuye/7ShKg4kJcpqN2R+vPlAhVfk48v0NBlvtdudfrfKoKXgR+Nn2EAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;discriminator loss 1&quot;
+        title=&quot;discriminator loss 1&quot;
+        src=&quot;/vynsblog/static/955d9c504413e97573f32fa435bb2583/f058b/discriminator_loss_1.png&quot;
+        srcset=&quot;/vynsblog/static/955d9c504413e97573f32fa435bb2583/c26ae/discriminator_loss_1.png 158w,
+/vynsblog/static/955d9c504413e97573f32fa435bb2583/6bdcf/discriminator_loss_1.png 315w,
+/vynsblog/static/955d9c504413e97573f32fa435bb2583/f058b/discriminator_loss_1.png 630w,
+/vynsblog/static/955d9c504413e97573f32fa435bb2583/6af66/discriminator_loss_1.png 640w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/vynsblog/static/fdd6744f32701b05230afae621b1b9ce/21b4d/discriminator_accuracy_1.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 75.31645569620254%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAB7CAAAewgFu0HU+AAABo0lEQVQ4y51U2XKDMAzM//9g0oMcfWmHBBt8X3hrmZCGtsmk9YwAC3mRdiVWuLNiSggxVosx1T1ZvhGfc8aKLs45WGshlYZQBlprWCXwtt9i37xg+/qM/fYVh12DXdmzUwtnFEyJqaYVxnGsoCt6OB6P6PsewnhwZdG174iqQzZ9uXMYMT0nzatFxS6WNKsf9yFMgHRxztesprwjtChBadoKN8In3F0hRHjvvwCFEMWGiRs7IHqH3kxfHErWMVE5uXL03WgR2AWQnJxzDMNQUpXIujsDBYzlnbABIY0X0r+L8AOQwEgQKjmngHwmt/8vIAnSdV0tuwadg21IUC5C2liB/wRIYEqpBS9pzDhJB1lAfwO7CUhtwxibOLwKIiE65WuWs/+hDGfH1DbLA0x79NovAB9SWZdOH0rZIeX6giYnxYB2sOA6LLj9vQ/DEpA4PBUuOTuiaRqs1xs8bdY4fLAqDilP1KQyx9f32SiBBWAswy+lAC8zSuKQUMQpcWuMqT7qBDo0+6jdaFyJqrZtL+WvFiTfUFFKWQ9d+645nH8MtP8El0aXbdtem44AAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;discriminator accuracy 1&quot;
+        title=&quot;discriminator accuracy 1&quot;
+        src=&quot;/vynsblog/static/fdd6744f32701b05230afae621b1b9ce/f058b/discriminator_accuracy_1.png&quot;
+        srcset=&quot;/vynsblog/static/fdd6744f32701b05230afae621b1b9ce/c26ae/discriminator_accuracy_1.png 158w,
+/vynsblog/static/fdd6744f32701b05230afae621b1b9ce/6bdcf/discriminator_accuracy_1.png 315w,
+/vynsblog/static/fdd6744f32701b05230afae621b1b9ce/f058b/discriminator_accuracy_1.png 630w,
+/vynsblog/static/fdd6744f32701b05230afae621b1b9ce/40601/discriminator_accuracy_1.png 945w,
+/vynsblog/static/fdd6744f32701b05230afae621b1b9ce/78612/discriminator_accuracy_1.png 1260w,
+/vynsblog/static/fdd6744f32701b05230afae621b1b9ce/21b4d/discriminator_accuracy_1.png 1280w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Looks like the result of training a typical autoencoder, so I think it’s working for that part of the loss function.&lt;/li&gt;
+&lt;li&gt;Learning rate could be reduced.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4&gt;Below is the training evolution over 36 epochs.&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&quot;/vynsblog/9056e84f2d31bfa946027cee0a5042e6/training_1.gif&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;h3&gt;Verification test 2&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;If alpha = 0 and beta = 1, should get same result as training a typical GAN. Although, with the caveat of the generator being autoencoder shaped. So results from this test may be varied.&lt;/li&gt;
+&lt;li&gt;This test will likely result in failure to converge because the generator is shaped like an autoencoder not a typical GAN generator. GANs can be pretty sensitive to changes in network architecture.&lt;/li&gt;
+&lt;li&gt;I’m hoping the combination between alpha and beta will allow the discriminator to be fooled and prevent convergence failure.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/vynsblog/static/752a0d9ac4098c41d86f9fc4932d41dc/0a867/ae_loss_2.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 72.15189873417721%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAOCAYAAAAvxDzwAAAACXBIWXMAAA9hAAAPYQGoP6dpAAABiUlEQVQ4y42TWVLDMAyGe/+zcAQuwPBYnmBgpiyBJk2zeYmX+Edy4pK001DPKIo91uffsrQJIYCHdw7WWljyjqzvexwOB+R5Hm2/36OuaxRFASll3Mf7jTFxb+Js0o9hmNHwRsEPQ4Ty5hTAlgDs26bBbreLh/HB3vsRyB8OFnQq0Yjc4ZYRBh/hKX4BDKRIs2zXE1CANbPyNZsPVrwADgzUDKQTRR6B4KAUOPkIm+Zz8AXQe0eJVgjeAs3nUsGZmsW1rwG11n8Km6+lwhW7CuQFISQpdEC1G3PJap1Zf5hTDmePkk7p6cU4l3h/QEgvLQpAVWRHukZ9YWHyVstYaouy6bpufN3tHcLLPcLPE8L3FqF8RSieR1++zfxooLkVRwKeFTZfm0sGn48ktxlr8sZhnZ/lcCoFKQS64gNdmaFWDq0yZD3qltbJt1KjESr+V7SW5nUnIZUa03WuUPUGzgc01FZK6dhuVVXFgCzL0LRtTE9ZHmPOuacr6m9eO/XyvJ7W6i0p+G/fL94SSu1L52TRAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;ae loss 2&quot;
+        title=&quot;ae loss 2&quot;
+        src=&quot;/vynsblog/static/752a0d9ac4098c41d86f9fc4932d41dc/f058b/ae_loss_2.png&quot;
+        srcset=&quot;/vynsblog/static/752a0d9ac4098c41d86f9fc4932d41dc/c26ae/ae_loss_2.png 158w,
+/vynsblog/static/752a0d9ac4098c41d86f9fc4932d41dc/6bdcf/ae_loss_2.png 315w,
+/vynsblog/static/752a0d9ac4098c41d86f9fc4932d41dc/f058b/ae_loss_2.png 630w,
+/vynsblog/static/752a0d9ac4098c41d86f9fc4932d41dc/40601/ae_loss_2.png 945w,
+/vynsblog/static/752a0d9ac4098c41d86f9fc4932d41dc/0a867/ae_loss_2.png 986w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;h4&gt;Below is the training evolution over 69 epochs.&lt;/h4&gt;
+&lt;p&gt;&lt;img src=&quot;/vynsblog/45fdf60679016ea6fedb5e5a9889210d/training_2.gif&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;h2&gt;Test using alpha = 1, beta = 0.005&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Learning rate reduced to 0.0001 (was 0.0002). I’m hoping this will provide better performance and reduce training time due to the volatility of the reconstruction loss.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/vynsblog/static/e3af4acbb51a81d69bce0b4ced58e4af/a07de/loss_verify_3.jpg&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 100.63291139240506%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/jpeg;base64,/9j/2wBDABALDA4MChAODQ4SERATGCgaGBYWGDEjJR0oOjM9PDkzODdASFxOQERXRTc4UG1RV19iZ2hnPk1xeXBkeFxlZ2P/2wBDARESEhgVGC8aGi9jQjhCY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2NjY2P/wgARCAAUABQDASIAAhEBAxEB/8QAFwABAQEBAAAAAAAAAAAAAAAAAAIBBf/EABUBAQEAAAAAAAAAAAAAAAAAAAEA/9oADAMBAAIQAxAAAAHr7YSkTpNCP//EABkQAQADAQEAAAAAAAAAAAAAAAEAAhESIv/aAAgBAQABBQLt2zlj1XsjbHZwRqKGH//EABQRAQAAAAAAAAAAAAAAAAAAACD/2gAIAQMBAT8BH//EABQRAQAAAAAAAAAAAAAAAAAAACD/2gAIAQIBAT8BH//EABgQAAIDAAAAAAAAAAAAAAAAAAABEBEh/9oACAEBAAY/AmYJxRk0f//EABoQAQADAQEBAAAAAAAAAAAAAAEAESExQdH/2gAIAQEAAT8hRLKGoglN+zYKWeTVL3nIAJLYJBAjNL3ty0MIhwn/2gAMAwEAAgADAAAAEPA4Av/EABcRAAMBAAAAAAAAAAAAAAAAAAABEIH/2gAIAQMBAT8Qys//xAAXEQADAQAAAAAAAAAAAAAAAAAAARCB/9oACAECAQE/ENqP/8QAHRABAQADAAIDAAAAAAAAAAAAAREAITFBUZGxwf/aAAgBAQABPxCIHyh9hv5w5gCo28H7lohsFrO9Q9Ltn3hoGwIvmYPALbMXSUvk5u4TtokOduVIhC5//9k=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;loss verify 3&quot;
+        title=&quot;loss verify 3&quot;
+        src=&quot;/vynsblog/static/e3af4acbb51a81d69bce0b4ced58e4af/828fb/loss_verify_3.jpg&quot;
+        srcset=&quot;/vynsblog/static/e3af4acbb51a81d69bce0b4ced58e4af/ff44c/loss_verify_3.jpg 158w,
+/vynsblog/static/e3af4acbb51a81d69bce0b4ced58e4af/a6688/loss_verify_3.jpg 315w,
+/vynsblog/static/e3af4acbb51a81d69bce0b4ced58e4af/828fb/loss_verify_3.jpg 630w,
+/vynsblog/static/e3af4acbb51a81d69bce0b4ced58e4af/0ede0/loss_verify_3.jpg 945w,
+/vynsblog/static/e3af4acbb51a81d69bce0b4ced58e4af/3ac88/loss_verify_3.jpg 1260w,
+/vynsblog/static/e3af4acbb51a81d69bce0b4ced58e4af/a07de/loss_verify_3.jpg 1287w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/vynsblog/static/431f2fb2e47a57b1a0d80342e087a617/6af66/ae_loss_3.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 75.31645569620254%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAA9hAAAPYQGoP6dpAAACKklEQVQ4y41UTY/TMBDtf+dXICEOSFxAqAcuCCRAiMOKVaGoZWkVkibZJG0+Gjdx4nzYycP2kpJsF4mRRm8qO288b2Y6g7S+7xWgbVs0TaNxiAfnnGsUEruu0+cDDt8rnI3JHNuGYRiwJVqWBdM0z+g4DrbbLXaOiyAIdOz7PjabDcIw1GRnQlaWiI8pjrQ+ZxoSDaZ+CyGQ0RKu6+okijCOYyRJgqqq9L3Z3UWOhOTYxRRjCS5QloiagtIchBAtgzKFE8KKMezjFCuPTF543/UZLk29fEKo9FNlW1GOmncXZY/xoSQXhEVRgBUUYcYmhBP8X0KlBWMV2rqCnxZoRQfR9XIkenCp2UXJD7x8QqjKzXJZKitghDnm3zyQstGHZcOnWv1J1I1feZ9w6FJdMSS0wqPXazz+aOCLlWDtnRBJGQ5ZBdYK/MtU9yca5vndGChTCl7fFni5jPD0ysfzRYgnn0y8urbx9sceV2aMn8EJ+xODT0p4aQnKGtT1iFCVwIoc4nYBHNYAdaXvZLyUvgLM96jqBhbhuDmUWPoUSy/Hws3w2Uw1MW/qv4RKQ5Km4MYHdItnENt34Ks5xHqOfvMG3fcXQPAVyGwpbAAU0psjwCK5swRdLadkXLLSkFKKU16AFA2iU4kkr+UqNgh1LCfANpCGHlzLAIkPcHa/cIwUmijkt6ox56aMFhadXEPB5T+JctHqmKRHeH6gy+ZyrFRnWy7UdY3jff8NzzCFf6gbpaUAAAAASUVORK5CYII=&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;ae loss 3&quot;
+        title=&quot;ae loss 3&quot;
+        src=&quot;/vynsblog/static/431f2fb2e47a57b1a0d80342e087a617/f058b/ae_loss_3.png&quot;
+        srcset=&quot;/vynsblog/static/431f2fb2e47a57b1a0d80342e087a617/c26ae/ae_loss_3.png 158w,
+/vynsblog/static/431f2fb2e47a57b1a0d80342e087a617/6bdcf/ae_loss_3.png 315w,
+/vynsblog/static/431f2fb2e47a57b1a0d80342e087a617/f058b/ae_loss_3.png 630w,
+/vynsblog/static/431f2fb2e47a57b1a0d80342e087a617/6af66/ae_loss_3.png 640w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+Below is the same graph, but zoomed out. Notice the spike, then recovery? AE loss seems to keep GAN loss under control, potentially causing the network to recover from convergence failure?
+&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/vynsblog/static/be9fdf1e9ddd5bc493fbf5712178a31b/7161f/ae_loss_3_zoomed_out.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 73.41772151898735%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAA9hAAAPYQGoP6dpAAABMElEQVQ4y62T226EMAxE+f+vbB/agoDAbsidZGqHZRsQXYFapFFMZB8cnKlSSvivh1kVBzFGGGOhtIZSE8UG4ziibVt0XZdXlhACwzCg73vKUwghwHufNc9zhlYrmUFNU+dkBnICJ3LRkWJMSMGRLCLVO+d+gFxsCXL5IRi8zqH3btvh+gWOT4lzH8C0B3KH5tFhWbS+H/z9ZfkNuO/wxDhfA7m7ssM/A/naWGtPA9NV4P7/7fdKYDocSgaa53HOThlOEkkdD8VQhz4CV4wYZAenbjneXGw+siYrfTUNmvqDbCdwl/csKSXktGiaJpLMUprsWb+h/XyH82RBt++QphyMhNMSt3HIXjZG55U93IuefCzyB3i/pz1NdnUUs7/nOSzAcqrpxVT5FOUF2NQV8TfwsJ9fkgUZ4QAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;ae loss 3 zoomed out&quot;
+        title=&quot;ae loss 3 zoomed out&quot;
+        src=&quot;/vynsblog/static/be9fdf1e9ddd5bc493fbf5712178a31b/f058b/ae_loss_3_zoomed_out.png&quot;
+        srcset=&quot;/vynsblog/static/be9fdf1e9ddd5bc493fbf5712178a31b/c26ae/ae_loss_3_zoomed_out.png 158w,
+/vynsblog/static/be9fdf1e9ddd5bc493fbf5712178a31b/6bdcf/ae_loss_3_zoomed_out.png 315w,
+/vynsblog/static/be9fdf1e9ddd5bc493fbf5712178a31b/f058b/ae_loss_3_zoomed_out.png 630w,
+/vynsblog/static/be9fdf1e9ddd5bc493fbf5712178a31b/40601/ae_loss_3_zoomed_out.png 945w,
+/vynsblog/static/be9fdf1e9ddd5bc493fbf5712178a31b/7161f/ae_loss_3_zoomed_out.png 1182w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/vynsblog/static/530b2d4e51bc8dad97fbd2f92b9fccad/33e10/discriminator_loss_3.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 76.58227848101265%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAA9hAAAPYQGoP6dpAAACBElEQVQ4y32Uy4+VMBTG59/VGOPKvf+FKxdqTCa+Fm4nk5jMwqgTo0aj8c7rAjM8LuXZUmjL5ylckHthbHIoKYdfv57vwAFotG2L24ZSCnVdd9E0zX9z7bODIcEmCyEgpeyiqqoOwhiD53ld+L4PzjmtS8qtkOYF4jhGkiTQWnecESgIoGVB22i0292W1AxrWjVI4ggXF5dwHKfbfAJsIWQNIzKSKjogti8O4NkGk3tjzD4QqOnIOvUAHo8Ksae0v+9h0xx73BE4PORlCbM5o7Mno8Kpoil0f6Md4KiQFrQFlhHa4dh0bbSBmUKW6rmj0BpC7hZFTgrPCRgCZM7wYlY1BNVj2ZZUz4BWgRAcKvyDinlQVd4732jcZJLMSilJ7Zh1K/CfKQrN+hS58xNJmiGXGtcR9WBSoSkZdVO9aNKiKTY4NWp9+RHZ6gOycI3vbgoWOGAJQxZ528ZtF9qoXVYolcH6/VO4z+/i6ugxfp28xe/jZzg9fo3g0xtInm9tmg9j2jmQ8xKrz0cI3j1CcPgAm8N7CF/cgf/qIdjL+2AnT1A7X2Cuv0F7X9FSR6ibH2hSHzVPuz7eA3IUXIArcpZLFEIiLwVKmotKIfI9FMEVYvcMBZVk465QbjyE7jlEkc2/5b7I1HNa0XdKYWdKsrMg9ZuYgarShbE/E933pO3Tqet/AbldjOJ6M9eFAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;discriminator loss 3&quot;
+        title=&quot;discriminator loss 3&quot;
+        src=&quot;/vynsblog/static/530b2d4e51bc8dad97fbd2f92b9fccad/f058b/discriminator_loss_3.png&quot;
+        srcset=&quot;/vynsblog/static/530b2d4e51bc8dad97fbd2f92b9fccad/c26ae/discriminator_loss_3.png 158w,
+/vynsblog/static/530b2d4e51bc8dad97fbd2f92b9fccad/6bdcf/discriminator_loss_3.png 315w,
+/vynsblog/static/530b2d4e51bc8dad97fbd2f92b9fccad/f058b/discriminator_loss_3.png 630w,
+/vynsblog/static/530b2d4e51bc8dad97fbd2f92b9fccad/33e10/discriminator_loss_3.png 844w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/vynsblog/static/f75536a37bf28831971a2338ffffa107/6af66/discriminator_accuracy_test_3.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 75.31645569620254%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAA9hAAAPYQGoP6dpAAABoUlEQVQ4y6WTyXajMBBF8/9/51XHGUhnkTaIGIRmIeHXVXLAODHehHPqQAnV1atBD6fTCVtPShlxHIuNKS22FcGsh3Nggvcezlp4a8h0sfe/FZ73j2R/8Pb6jLfqBa8vTzi2TdlntIIzqsTlaSrQAlRao+s62F5A1u/oxAdEc0AcGgTdI+ojvPqElp/IThY/kO+kwMjfjkT4cAbOKSs1wJsB0iUIHXG0lNq33LZSnUgdZ7goZKfrey4COkswE5aarA3f/FlMzvkC5EU+wVIdLsC4AL8+rgBn9gbQGAMpZTFOimHdCrgOvNXVH0AGaWqKda4c3epAdRyvFd4Zk5vAYRigSSkrbAYP7X8B5MUYY4Ey8J/0sDHdBF5qeKcp82ArpQvwo3dwY77Z5a16/hibEMKXQqBRASFNd1PN04muYC5xDJrfC5AlK6Uw5QRpCTimooTX2VjB7E8EC96ipZu03++x2+1QVVUp29VNcdRlvn7zaW3bgkeKN/Y09OzzP54GUR9glCz/67qGEKIcuihcF3tdl/nhcjRNc0k5T1eNWsf/BwBbl7VDVFiiAAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;discriminator accuracy test 3&quot;
+        title=&quot;discriminator accuracy test 3&quot;
+        src=&quot;/vynsblog/static/f75536a37bf28831971a2338ffffa107/f058b/discriminator_accuracy_test_3.png&quot;
+        srcset=&quot;/vynsblog/static/f75536a37bf28831971a2338ffffa107/c26ae/discriminator_accuracy_test_3.png 158w,
+/vynsblog/static/f75536a37bf28831971a2338ffffa107/6bdcf/discriminator_accuracy_test_3.png 315w,
+/vynsblog/static/f75536a37bf28831971a2338ffffa107/f058b/discriminator_accuracy_test_3.png 630w,
+/vynsblog/static/f75536a37bf28831971a2338ffffa107/6af66/discriminator_accuracy_test_3.png 640w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;&lt;/p&gt;
+&lt;h2&gt;Test using a pre-trained AE as a generator to the GAN&lt;/h2&gt;
+&lt;p&gt;Steps:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Train AE to reconstruct images from the original dataset.&lt;/li&gt;
+&lt;li&gt;Train GAN using the pre-trained AE. AE weights will get updated during that process.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Original dataset
+&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/vynsblog/static/804fcb00f8a6b54cbc222eccfd73f1e4/6af66/dataset_original.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 75.31645569620254%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAA9hAAAPYQGoP6dpAAACxUlEQVQ4y42U2U8TURTG+Xc08Yk/wviqiUvig0tIjMYQH4giIBJEqcqSSC1WpOwERSi0xTaUJV2Q0r2Udrrv0GFaLRRBoO3ncC8UoZJ4H+bO78zNd8/57plbBn4UCgWcHiWxU1w4g8uOXvL5PNJrcQTdTmxuZklsg41jh4thd3sLB6syPG+zEexs0e+hoB8x7wqyG5miaFFwd28fsvZGvLp+CVbjEomNN1bC0XIf2dUAYUbaAf3rCoSWTYQXRiUwiJoQMH8/TCp3LPibF1R8EmG4oQoBn5fEhloFmG+rQ5rjCAe0E1jsf4N42E/YPTMJ19deMHZLscqiYG4/B9NUL2b6mvjSoySm7hFCI2oGFw/REi3TmOupR4ShAtYxMVY+vwUXYWjJJwRzORilIuh763kBHy1ZUAtF9QNwYcpL8i5UXS6HfXGWWjDcgshoM/KZ+KGHfwkezAmjHL6pTmyuJ8ghODRquNUyrCcTNKP5cQy01sDldBBmGSPiugnEAr7SDPd295AYqYGx7iI8FgOJaQc/Yq79BdaC1NPxl/cwdPcCFtRywhZZH1RPb8FnNv77ULzKQSyJG+H3UdMd2lnYlTIkEzHCBlk/9J21fGstE9ZPf8OU+B24WPRkhkc9Ghj5AMXDO0h4aQlhywy8+kkko3QDRj4Mczvvsd9FeFD4GFXXzsFl1ZRmuM+rm0St6Lp5AyE3QzycHRVDPyBANEhP0TAiwfSzSoTdbsIqyRMIbp8H4yzpwwLy/NOmVUH6/jniEdomK+ovsI8J8TO1SjPWqRCRdyMVohuETGqwVikyMW/pKef5qbupEsKKcrBB6pGuoxqamqs8Owkr2+qhfHQFMauOJOBRdCIlb8APZvHQw9zJtgk4zbDwWW5nN0jJrMeGdZsOW5k0WeOxmXhP1chwLOE039C/InZkU8njf/ms2+Z/b5fT/Af/NjOWNe0ihwAAAABJRU5ErkJggg==&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;dataset original&quot;
+        title=&quot;dataset original&quot;
+        src=&quot;/vynsblog/static/804fcb00f8a6b54cbc222eccfd73f1e4/f058b/dataset_original.png&quot;
+        srcset=&quot;/vynsblog/static/804fcb00f8a6b54cbc222eccfd73f1e4/c26ae/dataset_original.png 158w,
+/vynsblog/static/804fcb00f8a6b54cbc222eccfd73f1e4/6bdcf/dataset_original.png 315w,
+/vynsblog/static/804fcb00f8a6b54cbc222eccfd73f1e4/f058b/dataset_original.png 630w,
+/vynsblog/static/804fcb00f8a6b54cbc222eccfd73f1e4/6af66/dataset_original.png 640w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+Reconstruction after pre-training AE
+&lt;span
+      class=&quot;gatsby-resp-image-wrapper&quot;
+      style=&quot;position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 630px; &quot;
+    &gt;
+      &lt;a
+    class=&quot;gatsby-resp-image-link&quot;
+    href=&quot;/vynsblog/static/a781edd9fa7864226e4c784989e5398d/6af66/ae_training_test.png&quot;
+    style=&quot;display: block&quot;
+    target=&quot;_blank&quot;
+    rel=&quot;noopener&quot;
+  &gt;
+    &lt;span
+    class=&quot;gatsby-resp-image-background-image&quot;
+    style=&quot;padding-bottom: 75.31645569620254%; position: relative; bottom: 0; left: 0; background-image: url(&apos;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAA9hAAAPYQGoP6dpAAACyklEQVQ4y51UWU9TQRjlL5nwpH9AH0xIjInRaOKTIRpNTHhQGzAVW1FSYxFQy1JITDVQllZatTSk2IWlCy10v23vLd036ILQ9djOLQWKvjgP9845MzlzvmWmA/VRq9XQPs5xbbj2D9xxPKlWq8hEQ6BdO8jncoTLxkM4Su2ieHiAxq5sIozfcQaHhTxZDwb8iFIOHOT2W6ItwWKpBKWQC8Hty7Aa1wkn5z+C7d195CN+gl3SERj49xDc3iR4TToJyxgXtEXfNFU5ETwqlvBz+gPm+T2gvW7CzQ8PQDvch71kjGC/Rg7TlABRmiLYrVmCUz4Fr83cirIlWCmXYZZNQTc5gL1okHDL0yPQiV4hFaIJZjbV0I7zEHZZCbYtiOCafYNMkDVQOyNYqWBrdgwmUT/SQS8b8iAHyt5upBkWWxcmwOu6CId+hU3BFwGCMwMoZ5hmDk8JNv5RowIBxUcUkhFSBLt2GZ4VGVKxMNmzU5/PCXrhtW8THPeYENTLEPZ7zjssFYsIfeXA2HcFlHmNcDqJCKvvuYj73eQAxcsHWLzbiQ3VElnfWhRD1XsH/r8VpVgqg1JJYJrkI0CxSXfoNbCrZEhEdgk2f5PA/OkFaCfrcF2lxIpYiHSYPuvwuEc9c0NYenoLEZ+LYHpDDd+qDEmGPcCl+IyNYQ4SPifBM4PPwLt6AV5T02HllMNyXX1d/Bri7i7QbjsJUT8zAdP0W4QpVsBY7ztV/0ME681PUjL6HOLrnfBZDO0h19girP6AYoiLGMM2slMthV06ilwyStYZw3cwinGkaTYCxqRGwriI/ZD3fJWr9Z+E+xgTNy8hQdkJpxc+gZZzA0mKdaQS9uFHzzWELL9QbRwoFyE2x0PaYWjm8FTIjW9gxwK7RonDfJbghNuKhFWHg/002eO1mkEZ1Mg2b06GcaNA21BIxU7ucuul+M/XpR3/AVqNNh5UAW21AAAAAElFTkSuQmCC&apos;); background-size: cover; display: block;&quot;
+  &gt;&lt;/span&gt;
+  &lt;img
+        class=&quot;gatsby-resp-image-image&quot;
+        alt=&quot;ae training test&quot;
+        title=&quot;ae training test&quot;
+        src=&quot;/vynsblog/static/a781edd9fa7864226e4c784989e5398d/f058b/ae_training_test.png&quot;
+        srcset=&quot;/vynsblog/static/a781edd9fa7864226e4c784989e5398d/c26ae/ae_training_test.png 158w,
+/vynsblog/static/a781edd9fa7864226e4c784989e5398d/6bdcf/ae_training_test.png 315w,
+/vynsblog/static/a781edd9fa7864226e4c784989e5398d/f058b/ae_training_test.png 630w,
+/vynsblog/static/a781edd9fa7864226e4c784989e5398d/6af66/ae_training_test.png 640w&quot;
+        sizes=&quot;(max-width: 630px) 100vw, 630px&quot;
+        style=&quot;width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;&quot;
+        loading=&quot;lazy&quot;
+        decoding=&quot;async&quot;
+      /&gt;
+  &lt;/a&gt;
+    &lt;/span&gt;
+Result after 100 epochs of training GAN
+&lt;img src=&quot;/vynsblog/8ad40b0cee9fef2301f255c6193fdb1e/pretrained_ae_gan.gif&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Images tend to be the same regardless of the input.&lt;/li&gt;
+&lt;li&gt;Using a pre-trained model for the AE seems to disconnect the relation between the input and output of the AE during the GAN training process.&lt;/li&gt;
+&lt;/ul&gt;</content:encoded></item><item><title><![CDATA[GAN Optimization Experiments]]></title><description><![CDATA[Performance metrics blur discriminator loss/accuracy ‘real’ discriminator loss/accuracy ‘fake’ generator loss/accuracy Number of parameters…]]></description><link>https://www.embeacons.com/wk-11-gan-optimizations/</link><guid isPermaLink="false">https://www.embeacons.com/wk-11-gan-optimizations/</guid><pubDate>Sun, 13 Mar 2022 22:12:03 GMT</pubDate><content:encoded>&lt;h2&gt;Performance metrics&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;blur&lt;/li&gt;
 &lt;li&gt;discriminator loss/accuracy ‘real’&lt;/li&gt;
