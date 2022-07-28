@@ -10,6 +10,7 @@ module.exports = {
     siteUrl: `https://www.embeacons.com`,
   },
   plugins: [
+    `gatsby-plugin-postcss`,
     `gatsby-plugin-image`,
     {
       resolve: `gatsby-source-filesystem`,

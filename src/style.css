@@ -225,8 +225,12 @@ table {
 }
 
 table thead tr th {
+  border-bottom: 3px solid var(--color-accent);
+}
+td {
   border-bottom: 1px solid var(--color-accent);
 }
+
 
 /* Link */
 
